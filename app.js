@@ -47,7 +47,8 @@ const debounce = (func, delay) => {
 }
 
 async function getRepo() {
-    await fetch(`https://api.github.com/search/repositories?q=${inp.value}in:name&per_page=5`).then((res) => {
+    if (inp.value.split('').every(el => el != " ") && inp.value.length != 0) {
+        await fetch(`https://api.github.com/search/repositories?q=${inp.value}in:name&per_page=5`).then((res) => {
         res.json().then(res => {
             let el = document.querySelectorAll('.el')
             let repoData = document.querySelectorAll('.repoData')
@@ -55,6 +56,10 @@ async function getRepo() {
             res.items.forEach(item => creatElement(item))
         })
     })
+    } else {
+        let el = document.querySelectorAll('.el')
+        el.forEach(el => el.remove())
+    }
 }
 
-inp.addEventListener('input', debounce(getRepo, 700))
+inp.addEventListener('input', debounce(getRepo, 500))
